@@ -7,6 +7,10 @@ class Entity {
         window.entities.push(this);
     }
 
+    add() {
+        Matter.Composite.add(this.world, this.body);
+    }
+
     remove() {
         Matter.Composite.remove(this.world, this.body);
         window.entities = window.entities.filter(e => e !== this);

@@ -8,7 +8,7 @@ class Enemy extends Entity {
         this.body = Matter.Bodies.rectangle(700, Math.random() * 640, 40, 40, {
             collisionFilter: {
                 category: 0x0004,
-                mask: 0x0008 | 0x0002 | 0x0001
+                mask: 0x0008 | 0x0004 | 0x0002 | 0x0001
             },
             render: {
                 fillStyle: '#ff0000'

@@ -55,17 +55,19 @@ function main() {
         friendCategory = 0x0008;
 
     const character = new Character();
-    window.bodies.push(character.body);
+    character.add();
 
     for (let i = 0; i < 5; i++) {
 
         const friend = new Friend();
-        window.bodies.push(friend.body);
+        friend.add();
 
     }
 
-    const enemy = new Enemy();
-    window.bodies.push(enemy.body);
+    for (let i = 0; i < 2; i++) {
+        const enemy = new Enemy();
+        enemy.add();
+    }
 
     const mouse = Matter.Mouse.create(render.canvas);
     render.mouse = mouse;

@@ -56,14 +56,16 @@ class Character extends Entity {
         if (this.body.velocity.y < -maxVelocity) {
             Matter.Body.setVelocity(this.body, { x: this.body.velocity.x, y: -maxVelocity });
         }
-        
+
     }
     
     remove() {
         super.remove();
 
-        for (const i in this.friends) {
-            const friend = this.friends[i];
+        const friends = this.friends;
+        for (const i in friends) {
+            const friend = friends[i];
+            console.log(this.friends, friends);
             friend.kill();
         }
     }

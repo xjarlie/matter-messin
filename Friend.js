@@ -26,6 +26,7 @@ class Friend extends Entity {
         this.active = false;
         this.constraint = 0;
         this.thrown = false;
+        this.group = 'friend';
 
     }
 

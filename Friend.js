@@ -39,6 +39,27 @@ class Friend extends Entity {
             this.body.collisionFilter.mask = 0x0004 | 0x0001;
         }
 
+        if (keyMap[' '] === true && this.constraint) {
+            Matter.Composite.remove(this.world, this.constraint);
+            this.constraint = 0;
+
+            this.body.render.fillStyle = '#00aa00';
+            this.setSize(80);
+            this.thrown = true;
+            this.thrownTick = ticks;
+            this.active = true;
+
+            this.character.removeFriend(this);
+        }
+        if (keyMap['x'] === true && !this.constraint) {
+            const targetVector = { x: Math.round(this.character.body.position.x), y: Math.round(this.character.body.position.y) };
+
+            const thisVector = { x: Math.round(this.body.position.x), y: Math.round(this.body.position.y) };
+            this.speed = 3;
+            Matter.Body.setVelocity(this.body, { x: Math.sign(targetVector.x - thisVector.x) * this.speed, y: Math.sign(targetVector.y - thisVector.y) * this.speed });
+    
+        }
+
         if (Matter.Collision.collides(this.body, this.character.body) !== null && !this.constraint) {
 
             this.constraint = Matter.Constraint.create({
@@ -54,25 +75,12 @@ class Friend extends Entity {
             this.setSize(30);
         }
 
-        if (keyMap[' '] === true && this.constraint) {
-            Matter.Composite.remove(this.world, this.constraint);
-            this.constraint = 0;
-
-            this.body.render.fillStyle = '#00aa00';
-            this.setSize(80);
-            this.thrown = true;
-            this.thrownTick = ticks;
-            this.active = true;
-
-            this.character.removeFriend(this);
-        }
-
-        if (this.thrown && this.thrownTick + 100 === ticks) {
+        if (this.thrown && this.thrownTick + 50 === ticks) {
             this.setSize(30);
             this.active = false;
         }
 
-        if (!this.constraint && (this.body.position.x > 800 || this.body.position.x < 0 || this.body.position.y > 640 || this.body.position.y < 0)) {
+        if (!this.removed && !this.constraint && (this.body.position.x > 800 || this.body.position.x < 0 || this.body.position.y > 640 || this.body.position.y < 0)) {
             this.respawn();
         }
 
@@ -83,8 +91,6 @@ class Friend extends Entity {
                 const enemy = getByKey([collision.bodyA, collision.bodyB].filter(e => getByKey(e.label).group === 'enemy')[0].label);
 
                 enemy.kill();
-
-                this.respawn();
             }
 
         }
@@ -101,16 +107,19 @@ class Friend extends Entity {
     }
 
     respawn() {
+        this.removed = true;
         this.remove();
         this.removeConstraint();
 
         const newFriend = new Friend(this.character, this.world);
         Matter.Composite.add(this.world, newFriend.body);
     }
-
+ 
     removeConstraint() {
-        Matter.Composite.remove(this.world, this.constraint);
-        this.constraint = 0;
+        if (this.constraint) {
+            Matter.Composite.remove(this.world, this.constraint);
+            this.constraint = 0;
+        }
     }
 }
 

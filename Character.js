@@ -65,7 +65,6 @@ class Character extends Entity {
         const friends = this.friends;
         for (const i in friends) {
             const friend = friends[i];
-            console.log(this.friends, friends);
             friend.kill();
         }
     }
@@ -79,7 +78,7 @@ class Character extends Entity {
         this.remove();
 
         const newCharacter = new Character();
-        Matter.Composite.add(this.world, newCharacter.body);
+        newCharacter.add();
     }
 
     addFriend(friend) {

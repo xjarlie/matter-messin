@@ -20,8 +20,8 @@ class Enemy extends Entity {
     }
 
     tick() {
-        this.chase(getByGroup('character').entities[0]);
-
+        this.altChase(getByGroup('character').entities[0]);
+        // this.chase(getByGroup('friend').entities[0]);
         const characterCollisions = Matter.Query.collides(this.body, getByGroup('character').bodies);
         for (const i in characterCollisions) {
             const collision = characterCollisions[i];
@@ -41,6 +41,32 @@ class Enemy extends Entity {
         const thisVector = { x: Math.round(this.body.position.x), y: Math.round(this.body.position.y) };
 
         Matter.Body.setVelocity(this.body, { x: Math.sign(targetVector.x - thisVector.x) * this.speed, y: Math.sign(targetVector.y - thisVector.y) * this.speed });
+
+    }
+
+    altChase(target) {
+
+        const targetVector = { x: Math.round(target.body.position.x), y: Math.round(target.body.position.y) };
+        const thisVector = { x: Math.round(this.body.position.x), y: Math.round(this.body.position.y) };
+
+        const targetVelocity = { x: target.body.velocity.x, y: target.body.velocity.y };
+
+        const aimVector = { x: targetVector.x + targetVelocity.x*300, y: targetVector.y + targetVelocity.y*300 };
+        
+
+        const targetDirection = {x: Math.sign(targetVelocity.x), y: Math.sign(targetVelocity.y) };
+
+        const newTargetVector = {x: targetVector.x + targetVelocity.x, y: targetVector.y + targetVelocity.y};
+
+        if (Math.abs(thisVector.x - newTargetVector.x) < Math.abs(thisVector.x - targetVector.x)) {
+            aimVector.x = targetVector.x;
+        }
+        if (Math.abs(thisVector.y - newTargetVector.y) < Math.abs(thisVector.y - targetVector.y)) {
+            aimVector.y = targetVector.y;
+        }
+        const moveDirection = {x: Math.sign(aimVector.x - thisVector.x), y: Math.sign(aimVector.y - thisVector.y)}
+
+        Matter.Body.setVelocity(this.body, { x:  moveDirection.x * this.speed, y: moveDirection.y * this.speed });
 
     }
 

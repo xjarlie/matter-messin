@@ -12,8 +12,8 @@ class Entity {
     }
 
     remove() {
-        Matter.Composite.remove(this.world, this.body);
         window.entities = window.entities.filter(e => e !== this);
+        Matter.Composite.remove(this.world, this.body);
     }
 
     tick() {

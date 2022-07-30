@@ -57,7 +57,7 @@ function main() {
     const character = new Character();
     character.add();
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 1; i++) {
 
         const friend = new Friend();
         friend.add();

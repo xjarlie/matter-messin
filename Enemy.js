@@ -20,8 +20,9 @@ class Enemy extends Entity {
     }
 
     tick() {
-        this.altChase(getByGroup('character').entities[0]);
+        //this.altChase(getByGroup('character').entities[0]);
         // this.chase(getByGroup('friend').entities[0]);
+        this.altAltChase(getByGroup('character').entities[0]);
         const characterCollisions = Matter.Query.collides(this.body, getByGroup('character').bodies);
         for (const i in characterCollisions) {
             const collision = characterCollisions[i];
@@ -30,8 +31,22 @@ class Enemy extends Entity {
             character.kill();
 
             this.respawn();
-
         }
+
+        const maxVelocity = this.speed;
+        if (this.body.velocity.x > maxVelocity) {
+            Matter.Body.setVelocity(this.body, { x: maxVelocity, y: this.body.velocity.y });
+        }
+        if (this.body.velocity.x < -maxVelocity) {
+            Matter.Body.setVelocity(this.body, { x: -maxVelocity, y: this.body.velocity.y });
+        }
+        if (this.body.velocity.y > maxVelocity) {
+            Matter.Body.setVelocity(this.body, { x: this.body.velocity.x, y: maxVelocity });
+        }
+        if (this.body.velocity.y < -maxVelocity) {
+            Matter.Body.setVelocity(this.body, { x: this.body.velocity.x, y: -maxVelocity });
+        }
+        console.log(this.body.velocity);
     }
 
     chase(target) {
@@ -68,6 +83,26 @@ class Enemy extends Entity {
 
         Matter.Body.setVelocity(this.body, { x:  moveDirection.x * this.speed, y: moveDirection.y * this.speed });
 
+    }
+
+    altAltChase(target) {
+
+        const targetPosition = { x: Math.round(target.body.position.x), y: Math.round(target.body.position.y)};
+        const thisPosition = { x: Math.round(this.body.position.x), y: Math.round(this.body.position.y) };
+
+        const targetVelocity = { x: target.body.velocity.x, y: target.body.velocity.y };
+
+        const targetDirection = { x: Math.sign(targetVelocity.x), y: Math.sign(targetVelocity.y) };
+
+        //console.log('POSITION:', targetPosition, 'DIRECTION', targetDirection);
+
+        const aimPosition = { x: targetPosition.x + (targetVelocity.x), y: targetPosition.y + (targetVelocity.y)};
+
+        const moveDirection = { x: Math.sign(aimPosition.x - thisPosition.x), y: Math.sign(aimPosition.y - thisPosition.y) };
+
+        //Matter.Body.setVelocity(this.body, { x: moveDirection.x * this.speed, y: moveDirection.y * this.speed });
+        const force = 0.005;
+        Matter.Body.applyForce(this.body, thisPosition, {x: moveDirection.x * force, y: moveDirection.y * force});
     }
 
     kill() {

@@ -11,18 +11,27 @@ class Enemy extends Entity {
                 mask: 0x0008 | 0x0004 | 0x0002 | 0x0001
             },
             render: {
-                fillStyle: '#ff0000'
+                //fillStyle: '#ff0000',
+                sprite: {
+                    texture: 'stalin.jpg',
+                    xScale: 0.058,
+                    yScale: 0.05
+                }
             },
             label: this.key
         });
         this.group = 'enemy';
         this.speed = 1;
+
+        this.health = 10;
+
+        console.log(this.body.render);
     }
 
     tick() {
-        //this.altChase(getByGroup('character').entities[0]);
-        // this.chase(getByGroup('friend').entities[0]);
+        // this.altChase(getByGroup('character').entities[0]);
         this.altAltChase(getByGroup('character').entities[0]);
+        // this.altAltChase(getByGroup('character').entities[0]);
         const characterCollisions = Matter.Query.collides(this.body, getByGroup('character').bodies);
         for (const i in characterCollisions) {
             const collision = characterCollisions[i];
@@ -46,7 +55,7 @@ class Enemy extends Entity {
         if (this.body.velocity.y < -maxVelocity) {
             Matter.Body.setVelocity(this.body, { x: this.body.velocity.x, y: -maxVelocity });
         }
-        console.log(this.body.velocity);
+        //console.log(this.body.velocity);
     }
 
     chase(target) {
@@ -103,6 +112,12 @@ class Enemy extends Entity {
         //Matter.Body.setVelocity(this.body, { x: moveDirection.x * this.speed, y: moveDirection.y * this.speed });
         const force = 0.005;
         Matter.Body.applyForce(this.body, thisPosition, {x: moveDirection.x * force, y: moveDirection.y * force});
+    }
+
+    damage(damage) {
+        console.log(damage);
+
+        this.kill();
     }
 
     kill() {

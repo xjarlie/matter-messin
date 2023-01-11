@@ -57,14 +57,14 @@ function main() {
     const character = new Character();
     character.add();
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 3; i++) {
 
         const friend = new Friend();
         friend.add();
 
     }
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 2000; i++) {
         const enemy = new Enemy();
         enemy.add();
     }

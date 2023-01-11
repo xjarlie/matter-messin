@@ -17,7 +17,7 @@ class Character extends Entity {
         });
 
         this.maxVelocity = 3;
-        this.force = 0.01;
+        this.force = 0.03;
         this.group = 'character';
         this.friends = [];
 

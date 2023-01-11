@@ -90,7 +90,9 @@ class Friend extends Entity {
                 const collision = enemyCollisions[i];
                 const enemy = getByKey([collision.bodyA, collision.bodyB].filter(e => getByKey(e.label).group === 'enemy')[0].label);
 
-                enemy.kill();
+                const penetration = collision.penetration;
+
+                enemy.damage(penetration);
             }
 
         }
